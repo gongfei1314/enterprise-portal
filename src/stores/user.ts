@@ -24,6 +24,42 @@ export const useUserStore = defineStore('user', () => {
   // 登录
   const login = async (username: string, password: string) => {
     try {
+      // 开发模式：模拟登录（用于测试前端界面）
+      if (import.meta.env.DEV) {
+        // 模拟测试账号验证
+        const validAccounts = {
+          admin: 'admin123',
+          user: 'user123',
+          test: 'test123'
+        }
+
+        if (validAccounts[username] && validAccounts[username] === password) {
+          // 模拟成功登录
+          const mockToken = 'mock-jwt-token-' + Date.now()
+          const mockUserInfo: UserInfo = {
+            id: username === 'admin' ? 1 : 2,
+            username: username,
+            realName: username === 'admin' ? '系统管理员' : (username === 'user' ? '普通用户' : '测试用户'),
+            email: `${username}@example.com`,
+            phone: '13800138000'
+          }
+
+          token.value = mockToken
+          userInfo.value = mockUserInfo
+          isLoggedIn.value = true
+
+          localStorage.setItem('access_token', mockToken)
+          localStorage.setItem('user_info', JSON.stringify(mockUserInfo))
+
+          message.success('登录成功（开发模式）')
+          return true
+        } else {
+          message.error('用户名或密码错误')
+          return false
+        }
+      }
+
+      // 生产模式：真实 API 调用
       const formData = new URLSearchParams()
       formData.append('username', username)
       formData.append('password', password)
@@ -48,6 +84,7 @@ export const useUserStore = defineStore('user', () => {
       return false
     } catch (error) {
       console.error('Login failed:', error)
+      message.error('登录失败，请稍后重试')
       return false
     }
   }
