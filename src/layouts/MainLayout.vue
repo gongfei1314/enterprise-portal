@@ -64,7 +64,13 @@
       </a-menu>
     </a-layout-sider>
 
-    <a-layout>
+    <a-layout
+      class="main-content"
+      :style="{
+        width: collapsed ? 'calc(100vw - 80px)' : 'calc(100vw - 200px)',
+        marginLeft: collapsed ? '80px' : '200px'
+      }"
+    >
       <!-- 顶部导航 -->
       <a-layout-header class="header">
         <div class="header-left">
@@ -202,13 +208,16 @@ const handleLogout = () => {
 <style scoped>
 .main-layout {
   min-height: 100vh;
+  display: flex;
+  width: 100%;
 }
 
 .sidebar {
-  position: fixed;
+  position: fixed !important;
   height: 100vh;
   left: 0;
-  z-index: 10;
+  top: 0;
+  z-index: 1000;
 }
 
 .logo {
@@ -228,6 +237,12 @@ const handleLogout = () => {
   margin: 0;
 }
 
+.main-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .header {
   background: white;
   padding: 0 24px;
@@ -235,12 +250,11 @@ const handleLogout = () => {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-  margin-left: 200px;
-  transition: margin-left 0.2s;
-}
-
-.main-layout:has(.sidebar.ant-layout-sider-collapsed) .header {
-  margin-left: 80px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  width: 100%;
+  height: 64px;
 }
 
 .header-left {
@@ -287,22 +301,43 @@ const handleLogout = () => {
 }
 
 .content {
-  margin: 24px 24px 0;
-  margin-left: 224px;
-  transition: margin-left 0.2s;
+  margin: 24px;
+  padding: 0;
   min-height: calc(100vh - 88px);
-}
-
-.main-layout:has(.sidebar.ant-layout-sider-collapsed) .content {
-  margin-left: 104px;
+  flex: 1;
+  width: 100%;
 }
 
 .content-wrapper {
   background: white;
   border-radius: 8px;
   padding: 24px;
-  min-height: calc(100vh - 112px);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  min-height: calc(100vh - 136px);
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.content-wrapper > * {
+  width: 100%;
+  max-width: 100%;
+}
+
+.content-wrapper :deep(.ant-card) {
+  width: 100%;
+  max-width: 100%;
+}
+
+.content-wrapper :deep(.ant-row) {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.content-wrapper :deep(.ant-col) {
+  flex: 0 0 auto;
+  max-width: 100%;
 }
 
 /* 路由切换动画 */
@@ -318,5 +353,28 @@ const handleLogout = () => {
 
 :deep(.ant-menu) {
   border-right: none;
+}
+
+:deep(.ant-layout-sider-children) {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 确保卡片组件正常显示 */
+:deep(.ant-card) {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+:deep(.ant-card-head) {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+:deep(.ant-row) {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+:deep(.ant-col) {
+  max-width: 100%;
 }
 </style>

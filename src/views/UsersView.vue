@@ -357,6 +357,16 @@ const handleModalCancel = () => {
   padding: 0;
 }
 
+.users-page :deep(.ant-row) {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.users-page :deep(.ant-col) {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
 :deep(.ant-table) {
   font-size: 14px;
 }

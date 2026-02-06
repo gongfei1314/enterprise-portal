@@ -271,15 +271,24 @@ const getPriorityColor = (priority: string) => {
   padding: 0;
 }
 
-.stat-card {
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s, box-shadow 0.3s;
+.dashboard :deep(.ant-row) {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+.dashboard :deep(.ant-col) {
+  flex: 0 0 auto;
+  max-width: 100%;
+}
+
+.stat-card {
+  margin-bottom: 0 !important;
+}
+
+:deep(.ant-statistic) {
+  padding: 8px 0;
 }
 
 :deep(.ant-statistic-title) {
@@ -303,6 +312,8 @@ const getPriorityColor = (priority: string) => {
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s;
+  height: 100%;
+  min-height: 100px;
 }
 
 .quick-action:hover {
