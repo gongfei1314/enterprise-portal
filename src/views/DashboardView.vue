@@ -1,125 +1,101 @@
 <template>
   <div class="dashboard">
-    <a-row :gutter="24">
-      <a-col :span="6">
-        <a-card class="stat-card">
-          <a-statistic
-            title="总客户数"
-            :value="statistics.customers"
-            :value-style="{ color: '#3f8600' }"
-          >
-            <template #prefix>
-              <TeamOutlined style="font-size: 24px" />
-            </template>
-          </a-statistic>
-        </a-card>
-      </a-col>
+    <div class="stats-row">
+      <a-card class="stat-card">
+        <a-statistic
+          title="总客户数"
+          :value="statistics.customers"
+          :value-style="{ color: '#3f8600' }"
+        >
+          <template #prefix>
+            <TeamOutlined style="font-size: 24px" />
+          </template>
+        </a-statistic>
+      </a-card>
 
-      <a-col :span="6">
-        <a-card class="stat-card">
-          <a-statistic
-            title="进行中项目"
-            :value="statistics.projects"
-            :value-style="{ color: '#1890ff' }"
-          >
-            <template #prefix>
-              <ProjectOutlined style="font-size: 24px" />
-            </template>
-          </a-statistic>
-        </a-card>
-      </a-col>
+      <a-card class="stat-card">
+        <a-statistic
+          title="进行中项目"
+          :value="statistics.projects"
+          :value-style="{ color: '#1890ff' }"
+        >
+          <template #prefix>
+            <ProjectOutlined style="font-size: 24px" />
+          </template>
+        </a-statistic>
+      </a-card>
 
-      <a-col :span="6">
-        <a-card class="stat-card">
-          <a-statistic
-            title="待处理任务"
-            :value="statistics.tasks"
-            :value-style="{ color: '#cf1322' }"
-          >
-            <template #prefix>
-              <CheckSquareOutlined style="font-size: 24px" />
-            </template>
-          </a-statistic>
-        </a-card>
-      </a-col>
+      <a-card class="stat-card">
+        <a-statistic
+          title="待处理任务"
+          :value="statistics.tasks"
+          :value-style="{ color: '#cf1322' }"
+        >
+          <template #prefix>
+            <CheckSquareOutlined style="font-size: 24px" />
+          </template>
+        </a-statistic>
+      </a-card>
 
-      <a-col :span="6">
-        <a-card class="stat-card">
-          <a-statistic
-            title="本月收入（万元）"
-            :value="statistics.revenue"
-            :value-style="{ color: '#faad14' }"
-            :precision="2"
-          >
-            <template #prefix>
-              <DollarOutlined style="font-size: 24px" />
-            </template>
-          </a-statistic>
-        </a-card>
-      </a-col>
-    </a-row>
+      <a-card class="stat-card">
+        <a-statistic
+          title="本月收入（万元）"
+          :value="statistics.revenue"
+          :value-style="{ color: '#faad14' }"
+          :precision="2"
+        >
+          <template #prefix>
+            <DollarOutlined style="font-size: 24px" />
+          </template>
+        </a-statistic>
+      </a-card>
+    </div>
 
-    <a-row :gutter="24" style="margin-top: 24px">
-      <a-col :span="12">
-        <a-card title="最新动态" :bordered="false">
-          <a-list :data-source="recentActivities" size="small">
-            <template #renderItem="{ item }">
-              <a-list-item>
-                <a-list-item-meta :description="item.time">
-                  <template #title>
-                    <span>{{ item.title }}</span>
-                  </template>
-                  <template #avatar>
-                    <a-avatar :style="{ backgroundColor: item.color }">
-                      {{ item.user.charAt(0) }}
-                    </a-avatar>
-                  </template>
-                </a-list-item-meta>
-              </a-list-item>
-            </template>
-          </a-list>
-        </a-card>
-      </a-col>
+    <div class="content-row">
+      <a-card title="最新动态" :bordered="false" class="content-card">
+        <a-list :data-source="recentActivities" size="small">
+          <template #renderItem="{ item }">
+            <a-list-item>
+              <a-list-item-meta :description="item.time">
+                <template #title>
+                  <span>{{ item.title }}</span>
+                </template>
+                <template #avatar>
+                  <a-avatar :style="{ backgroundColor: item.color }">
+                    {{ item.user.charAt(0) }}
+                  </a-avatar>
+                </template>
+              </a-list-item-meta>
+            </a-list-item>
+          </template>
+        </a-list>
+      </a-card>
 
-      <a-col :span="12">
-        <a-card title="快捷操作" :bordered="false">
-          <a-row :gutter="16">
-            <a-col :span="8">
-              <div class="quick-action" @click="$router.push('/customers')">
-                <TeamOutlined style="font-size: 32px; color: #1890ff" />
-                <div>客户管理</div>
-              </div>
-            </a-col>
-            <a-col :span="8">
-              <div class="quick-action" @click="$router.push('/projects')">
-                <ProjectOutlined style="font-size: 32px; color: #52c41a" />
-                <div>项目管理</div>
-              </div>
-            </a-col>
-            <a-col :span="8">
-              <div class="quick-action" @click="$router.push('/tasks')">
-                <CheckSquareOutlined style="font-size: 32px; color: #faad14" />
-                <div>任务管理</div>
-              </div>
-            </a-col>
-          </a-row>
-          <a-row :gutter="16" style="margin-top: 16px">
-            <a-col :span="8">
-              <div class="quick-action" @click="$router.push('/finance')">
-                <DollarOutlined style="font-size: 32px; color: #f5222d" />
-                <div>财务管理</div>
-              </div>
-            </a-col>
-            <a-col :span="8">
-              <div class="quick-action" @click="$router.push('/users')">
-                <UserOutlined style="font-size: 32px; color: #722ed1" />
-                <div>用户管理</div>
-              </div>
-            </a-col>
-          </a-row>
-        </a-card>
-      </a-col>
-    </a-row>
+      <a-card title="快捷操作" :bordered="false" class="content-card">
+        <div class="quick-actions-grid">
+          <div class="quick-action" @click="$router.push('/customers')">
+            <TeamOutlined style="font-size: 32px; color: #1890ff" />
+            <div>客户管理</div>
+          </div>
+          <div class="quick-action" @click="$router.push('/projects')">
+            <ProjectOutlined style="font-size: 32px; color: #52c41a" />
+            <div>项目管理</div>
+          </div>
+          <div class="quick-action" @click="$router.push('/tasks')">
+            <CheckSquareOutlined style="font-size: 32px; color: #faad14" />
+            <div>任务管理</div>
+          </div>
+          <div class="quick-action" @click="$router.push('/finance')">
+            <DollarOutlined style="font-size: 32px; color: #f5222d" />
+            <div>财务管理</div>
+          </div>
+          <div class="quick-action" @click="$router.push('/users')">
+            <UserOutlined style="font-size: 32px; color: #722ed1" />
+            <div>用户管理</div>
+          </div>
+        </div>
+      </a-card>
+    </div>
 
     <a-row style="margin-top: 24px">
       <a-col :span="24">
@@ -269,18 +245,70 @@ const getPriorityColor = (priority: string) => {
 <style scoped>
 .dashboard {
   padding: 0;
-}
-
-.dashboard :deep(.ant-row) {
-  display: flex;
-  flex-wrap: wrap;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-}
-
-.dashboard :deep(.ant-col) {
-  flex: 0 0 auto;
+  width: 100%;
   max-width: 100%;
+  overflow-x: hidden;
+}
+
+.stats-row {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.stats-row .stat-card {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 0 !important;
+}
+
+.content-row {
+  display: flex;
+  gap: 24px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.content-row .content-card {
+  flex: 1;
+  min-width: 0;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.quick-actions-grid .quick-action:nth-child(4),
+.quick-actions-grid .quick-action:nth-child(5) {
+  grid-column: span 1;
+}
+
+.quick-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: #fafafa;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-height: 100px;
+}
+
+.quick-action:hover {
+  background: #e6f7ff;
+  transform: translateY(-2px);
+}
+
+.quick-action div {
+  margin-top: 12px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
 }
 
 .stat-card {
