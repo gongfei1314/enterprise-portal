@@ -9,7 +9,7 @@
       class="sidebar"
     >
       <div class="logo">
-        <h2 v-if="!collapsed">企业门户</h2>
+        <h2 v-if="!collapsed">乐融门户</h2>
         <h2 v-else>门户</h2>
       </div>
 

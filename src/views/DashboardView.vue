@@ -127,7 +127,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
   TeamOutlined,
   ProjectOutlined,
@@ -135,42 +135,20 @@ import {
   DollarOutlined,
   UserOutlined
 } from '@ant-design/icons-vue'
+import { getDashboardStats, getRecentActivities, getTodoList } from '@/api/dashboard'
+import type { DashboardStats, RecentActivity, TodoItem } from '@/api/dashboard'
+import { message } from 'ant-design-vue'
 
 // 统计数据
-const statistics = ref({
-  customers: 128,
-  projects: 45,
-  tasks: 23,
-  revenue: 156.8
+const statistics = ref<DashboardStats>({
+  customers: 0,
+  projects: 0,
+  tasks: 0,
+  revenue: 0
 })
 
 // 最新动态
-const recentActivities = ref([
-  {
-    title: '新增客户：科技有限公司',
-    user: '张三',
-    time: '10分钟前',
-    color: '#1890ff'
-  },
-  {
-    title: '项目进度更新：ERP系统开发',
-    user: '李四',
-    time: '30分钟前',
-    color: '#52c41a'
-  },
-  {
-    title: '任务完成：需求文档评审',
-    user: '王五',
-    time: '1小时前',
-    color: '#faad14'
-  },
-  {
-    title: '财务审批：报销单 #2026001',
-    user: '赵六',
-    time: '2小时前',
-    color: '#f5222d'
-  }
-])
+const recentActivities = ref<RecentActivity[]>([])
 
 // 待办事项表格
 const todoColumns = [
@@ -201,36 +179,8 @@ const todoColumns = [
   }
 ]
 
-const todoList = ref([
-  {
-    key: '1',
-    title: '完成客户需求分析报告',
-    priority: '高',
-    deadline: '2026-02-06',
-    assignee: '张三'
-  },
-  {
-    key: '2',
-    title: '项目进度汇报会议',
-    priority: '中',
-    deadline: '2026-02-07',
-    assignee: '李四'
-  },
-  {
-    key: '3',
-    title: '审核财务报销单据',
-    priority: '高',
-    deadline: '2026-02-06',
-    assignee: '王五'
-  },
-  {
-    key: '4',
-    title: '更新项目计划文档',
-    priority: '低',
-    deadline: '2026-02-10',
-    assignee: '赵六'
-  }
-])
+const todoList = ref<TodoItem[]>([])
+const loading = ref(false)
 
 const getPriorityColor = (priority: string) => {
   const colorMap: Record<string, string> = {
@@ -240,6 +190,44 @@ const getPriorityColor = (priority: string) => {
   }
   return colorMap[priority] || 'default'
 }
+
+// 加载工作台数据
+const loadDashboardData = async () => {
+  loading.value = true
+  try {
+    // 并行加载所有数据
+    const [statsRes, activitiesRes, todosRes] = await Promise.allSettled([
+      getDashboardStats(),
+      getRecentActivities(10),
+      getTodoList({ limit: 10 })
+    ])
+
+    // 处理统计数据
+    if (statsRes.status === 'fulfilled' && statsRes.value.code === 200) {
+      statistics.value = statsRes.value.data
+    }
+
+    // 处理最新动态
+    if (activitiesRes.status === 'fulfilled' && activitiesRes.value.code === 200) {
+      recentActivities.value = activitiesRes.value.data
+    }
+
+    // 处理待办事项
+    if (todosRes.status === 'fulfilled' && todosRes.value.code === 200) {
+      todoList.value = todosRes.value.data
+    }
+  } catch (error) {
+    console.error('Failed to load dashboard data:', error)
+    message.error('加载数据失败')
+  } finally {
+    loading.value = false
+  }
+}
+
+// 组件挂载时加载数据
+onMounted(() => {
+  loadDashboardData()
+})
 </script>
 
 <style scoped>
