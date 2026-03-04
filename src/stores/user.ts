@@ -13,13 +13,15 @@ interface UserInfo {
 }
 
 export const useUserStore = defineStore('user', () => {
-  const token = ref<string>(localStorage.getItem('access_token') || '')
+  // 初始化时从 localStorage 读取数据
+  const savedToken = localStorage.getItem('access_token')
+  const savedUserInfo = localStorage.getItem('user_info')
+
+  const token = ref<string>(savedToken || '')
   const userInfo = ref<UserInfo | null>(
-    localStorage.getItem('user_info')
-      ? JSON.parse(localStorage.getItem('user_info')!)
-      : null
+    savedUserInfo ? JSON.parse(savedUserInfo) : null
   )
-  const isLoggedIn = ref<boolean>(!!token.value)
+  const isLoggedIn = ref<boolean>(!!savedToken)
 
   // 登录
   const login = async (username: string, password: string) => {

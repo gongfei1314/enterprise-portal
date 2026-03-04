@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
+import { useUserStore } from '@/stores/user'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -60,16 +61,16 @@ const router = createRouter({
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
-  // 检查 localStorage 中是否有 token
-  const token = localStorage.getItem('access_token')
+  const userStore = useUserStore()
 
   // 检查路由是否需要认证
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth !== false)
 
-  if (requiresAuth && !token) {
+  // 使用 store 的 isLoggedIn 状态
+  if (requiresAuth && !userStore.isLoggedIn) {
     // 需要认证但未登录，跳转到登录页
     next({ name: 'Login', query: { redirect: to.fullPath } })
-  } else if (to.name === 'Login' && token) {
+  } else if (to.name === 'Login' && userStore.isLoggedIn) {
     // 已登录但访问登录页，跳转到首页
     next({ name: 'Dashboard' })
   } else {

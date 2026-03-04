@@ -107,7 +107,7 @@ const handleLogin = async () => {
     if (success) {
       // 跳转到目标页面或首页
       const redirect = (route.query.redirect as string) || '/'
-      router.push(redirect)
+      await router.push(redirect)
     }
   } finally {
     loading.value = false

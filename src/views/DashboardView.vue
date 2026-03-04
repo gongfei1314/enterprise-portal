@@ -195,6 +195,36 @@ const getPriorityColor = (priority: string) => {
 const loadDashboardData = async () => {
   loading.value = true
   try {
+    // 开发模式：使用模拟数据
+    if (import.meta.env.DEV) {
+      // 模拟统计数据
+      statistics.value = {
+        customers: 128,
+        projects: 24,
+        tasks: 15,
+        revenue: 45.8
+      }
+
+      // 模拟最新动态
+      recentActivities.value = [
+        { id: 1, type: 'customer', title: '新增客户：某某科技公司', time: '5分钟前' },
+        { id: 2, type: 'project', title: '项目进度更新：ERP系统开发', time: '15分钟前' },
+        { id: 3, type: 'task', title: '完成任务：代码审查', time: '1小时前' },
+        { id: 4, type: 'finance', title: '收款确认：某某公司首付', time: '2小时前' }
+      ]
+
+      // 模拟待办事项
+      todoList.value = [
+        { id: 1, title: '完成客户需求文档', priority: 'high', deadline: '2026-02-26' },
+        { id: 2, title: '项目进度会议', priority: 'medium', deadline: '2026-02-27' },
+        { id: 3, title: '审核财务报表', priority: 'low', deadline: '2026-02-28' }
+      ]
+
+      loading.value = false
+      return
+    }
+
+    // 生产模式：调用真实API
     // 并行加载所有数据
     const [statsRes, activitiesRes, todosRes] = await Promise.allSettled([
       getDashboardStats(),
