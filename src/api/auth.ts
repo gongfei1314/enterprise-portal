@@ -7,7 +7,7 @@ export const login = (data: { username: string; password: string }) => {
     method: 'post',
     data: data,
     headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+      'Content-Type': 'application/json'
     }
   })
 }

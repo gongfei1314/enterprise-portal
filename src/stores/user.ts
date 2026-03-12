@@ -27,7 +27,8 @@ export const useUserStore = defineStore('user', () => {
   const login = async (username: string, password: string) => {
     try {
       // 开发模式：模拟登录（用于测试前端界面）
-      if (import.meta.env.DEV) {
+      //if (import.meta.env.DEV) {
+      if (false) {
         // 模拟测试账号验证
         const validAccounts = {
           admin: 'admin123',
